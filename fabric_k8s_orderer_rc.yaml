@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  creationTimestamp: null
+  labels:
+    service: orderer-example-com
+  name: orderer-example-com
+  namespace: fabric
+spec:
+  replicas: 1
+  selector:
+    service: orderer-example-com
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: orderer-example-com
+    spec:
+      containers:
+#      - command: ["/bin/sh", "-c", "mkdir -p /var/hyperledger/orderer && chmod +x /root/start_orderer.sh && /root/start_orderer.sh"]
+#      - command: ["/bin/sh", "-c", "mkdir -p /var/hyperledger/orderer && echo tttt && chmod +x /root/start_orderer.sh && sleep 50000"]
+      - command: ["/bin/sh", "-c", "orderer"]
+#      - command: ["/bin/sh", "-c", "sleep 50000"]
+        env:
+        - name: ORDERER_GENERAL_GENESISMETHOD
+          value: file
+        - name: ORDERER_GENERAL_GENESISFILE
+          value: /var/hyperledger/Separete_nodes/k8s/channel-artifacts/genesis.block
+        - name: ORDERER_GENERAL_LOCALMSPID
+          value: OrdererMSP
+        - name: ORDERER_GENERAL_LOCALMSPDIR
+          value: /var/hyperledger/Separete_nodes/k8s/crypto-config/ordererOrganizations/example-com/orderers/orderer.example-com/msp
+
+        - name: ORDERER_GENERAL_LISTENADDRESS
+          value: 0.0.0.0
+        - name: ORDERER_GENERAL_LOGLEVEL
+          value: DEBUG
+        - name: ORDERER_GENERAL_TLS_ENABLED
+          value: "false"
+
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: "/var/hyperledger/Separete_nodes/k8s/crypto-config/ordererOrganizations/example-com/orderers/orderer.example-com/tls/server.key"
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: "/var/hyperledger/Separete_nodes/k8s/crypto-config/ordererOrganizations/example-com/orderers/orderer.example-com/tls/server.crt"
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: "[/var/hyperledger/Separete_nodes/k8s/crypto-config/ordererOrganizations/example-com/orderers/orderer.example-com/tls/ca.crt]"
+          
+        - name: FABRIC_CFG_PATH
+          value: /var/hyperledger/Separete_nodes/k8s/crypto-config/ordererOrganizations/example-com/orderers/orderer.example-com          
+        image: hyperledger/fabric-orderer:x86_64-1.0.1
+#        imagePullPolicy: ""
+        name: orderer-example-com
+        volumeMounts:
+        - name: git-volume
+          mountPath: /var/hyperledger/
+#        - name: orderer-stuff-vol
+#          mountPath: /var/hyperledger/
+#        - name: start-orderer-vol
+#          mountPath: /root
+##        - name: genesis-block-vol
+##          mountPath: /var/genesis_block
+
+##        - mountPath: /varaaa/hyperledger/ordereraaaa
+##          name: orderer-vol
+#        - name: orderer-vol
+#          mountPath: /var/genesis_block
+        ports:
+        - containerPort: 7050
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: git-volume
+        gitRepo:
+          repository: "https://github.com/Oborysenko/Separete_nodes.git"
+##      - name: msptls
+##        configMap:
+##          name: cc-orderer
+#      - name: start-orderer-vol
+#        configMap:
+#          name: start-orderer-cm
+#      - name: orderer-stuff-vol
+#        configMap:
+#          name: orderer-stuff-cm 
+##      - name: genesis-block-vol
+##        configMap:
+##          name: orderer-genesis-block-cm
+##      - name: orderer-vol
+##        hostPath:
+##          path: /home/oleks/aaa
+#      - name: orderer-vol
+#        secret:
+#          secretName: orderer-sec 
+status:
+  replicas: 0
