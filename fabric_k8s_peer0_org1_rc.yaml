@@ -17,8 +17,7 @@ spec:
         service: peer0-org1-example-com
     spec:
       containers:
-      - command: ["/bin/sh", "-c", "cp -r /var/hyperledger/Separete_nodes/k8s/crypto-config/peerOrganizations/org1-example-com/peers/peer0.org1-example-com/* /etc/hyperledger/fabric/ && peer node start"] 
-#      - command: ["/bin/sh", "-c", "peer node start"] 
+      - command: ["/bin/sh", "-c", "peer node start"] 
         env:
         - name: CORE_PEER_ID
           value: peer0-org1-example-com
@@ -61,8 +60,6 @@ spec:
           mountPath: /var/hyperledger/
         - name: dockersocket
           mountPath: /host/var/run
-#        - name: docker-graph-storage 
-#          mountPath: /var/lib/docker 
         ports:
         - containerPort: 7051
         - containerPort: 7053
@@ -76,7 +73,5 @@ spec:
       - name: dockersocket
         hostPath:
           path: /var/run
-#      - name: docker-graph-storage 
-#        emptyDir: {}
 status:
   replicas: 0
