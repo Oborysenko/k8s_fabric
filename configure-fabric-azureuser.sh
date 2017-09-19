@@ -33,7 +33,7 @@ function generate_artifacts {
     echo Retrieve tools
     # TODO: download less stuff?
 
-    curl -qL https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz  -o release.tar.gz
+#    curl -qL https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz  -o release.tar.gz
     tar -xvf release.tar.gz
 
     # Set up environment
@@ -44,15 +44,15 @@ echo     Parse configuration templates
     sed -e "s/{{PREFIX}}/${PREFIX}/g" crypto-config_template.yaml > crypto-config.yaml
     sed -e "s/{{PREFIX}}/${PREFIX}/g" configtx_template.yaml > configtx.yaml
 
-    sed -e "s/{{Index}}/${INDEX}/g" crypto-config_template.yaml > crypto-config.yaml
-    sed -e "s/{{Index}}/${INDEX}/g" configtx_template.yaml > configtx.yaml
-    # Generate crypto config
+    sed -e "s/{{.Index}}/${INDEX}/g" crypto-config_template.yaml > crypto-config.yaml
+    sed -e "s/{{.Index}}/${INDEX}/g" configtx_template.yaml > configtx.yaml
+echo    Generate crypto config
     ./bin/cryptogen generate --config=./crypto-config.yaml
 
-    # Generate genesis block
+echo     Generate genesis block
     ./bin/configtxgen -profile TwoOrgs -outputBlock orderer.block
 
-    # Generate transaction configuration
+echo     Generate transaction configuration
     ./bin/configtxgen -profile TwoOrgs -outputCreateChannelTx channel.tx -channelID mychannel
 }
 
