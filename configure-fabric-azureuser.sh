@@ -1,10 +1,10 @@
 #!/bin/bash
 
 NODE_TYPE=$1
-AZUREUSER=$2
+AZUREUSER=azureuser
 ARTIFACTS_URL_PREFIX=$3
 NODE_INDEX=$4
-CA_PREFIX=$5
+CA_PREFIX=fabric6ie-ca0
 CA_NUM=$6
 ORDERER_PREFIX=$7
 ORDERER_NUM=$8
@@ -17,11 +17,11 @@ INDEX=0
 ARCH=linux-amd64
 VERSION=1.0.2
 
-FABRIC_VERSION=x86_64-1.0.0-alpha
+FABRIC_VERSION=x86_64-1.0.2
 
 # TODO: extract those from the configuration
-PEER_ORG_DOMAIN="org1.example.com"
-ORDERER_ORG_DOMAIN="example.com"
+PEER_ORG_DOMAIN="org1.triangu.com"
+ORDERER_ORG_DOMAIN="triangu.com"
 
 function generate_artifacts {
     echo "Generating network artifacts..."
@@ -33,8 +33,8 @@ function generate_artifacts {
     echo Retrieve tools
     # TODO: download less stuff?
 
-#    curl -qL https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz  -o release.tar.gz
-#    tar -xvf release.tar.gz
+    curl -qL https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz  -o release.tar.gz
+    tar -xvf release.tar.gz
 
     # Set up environment
     os_arch=$(echo "$(uname -s)-amd64" | awk '{print tolower($0)}')
